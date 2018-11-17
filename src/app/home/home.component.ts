@@ -12,16 +12,18 @@ import { createHttpObservable } from '../common/util';
 })
 export class HomeComponent implements OnInit {
 
-    beginnersCourses$: Observable<Array<Course>>;
+    beginnersCourses$: Observable<Array<Object>>;
 
-    advancedCourses$: Observable<Array<Course>>;
+    advancedCourses$: Observable<Array<Object>>;
 
     ngOnInit() {
 
       const http$ = createHttpObservable('/api/courses');
 
-      const courses$: Observable<Array<Course>> = http$.pipe(
-        map( res => Object.values(res['payload']))
+      const courses$: Observable<Array<Object>> = http$.pipe(
+        tap(() => console.log('Http request executed')),
+        map( res => Object.values(res['payload'])),
+        // shareReplay()
       );
 
       this.beginnersCourses$ = courses$.pipe(
