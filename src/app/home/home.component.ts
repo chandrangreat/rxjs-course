@@ -23,7 +23,7 @@ export class HomeComponent implements OnInit {
       const courses$: Observable<Array<Object>> = http$.pipe(
         tap(() => console.log('Http request executed')),
         map( res => Object.values(res['payload'])),
-        // shareReplay()
+        shareReplay()
       );
 
       this.beginnersCourses$ = courses$.pipe(
