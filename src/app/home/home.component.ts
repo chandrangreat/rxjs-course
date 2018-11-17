@@ -12,30 +12,38 @@ import { createHttpObservable } from '../common/util';
 })
 export class HomeComponent implements OnInit {
 
-    beginnersCourses: Array<Object>;
+    beginnersCourses$: Observable<Array<Course>>;
 
-    advancedCourses: Array<Object>;
+    advancedCourses$: Observable<Array<Course>>;
 
     ngOnInit() {
 
       const http$ = createHttpObservable('/api/courses');
 
-      const courses$ = http$.pipe(
+      const courses$: Observable<Array<Course>> = http$.pipe(
         map( res => Object.values(res['payload']))
       );
 
-      courses$.subscribe(
-        courses => {
-
-          this.beginnersCourses = courses
-                  .filter(course => course['category'] === 'BEGINNER');
-
-          this.advancedCourses = courses
-                  .filter(course => course['category'] === 'ADVANCED');
-        },
-        noop,
-        () => console.log('completed')
+      this.beginnersCourses$ = courses$.pipe(
+        map(courses => courses
+            .filter(course => course['category'] === 'BEGINNER'))
       );
+
+      this.advancedCourses$ = courses$.pipe(
+        map(courses => courses
+            .filter(course => course['category'] === 'ADVANCED'))
+      );
+
+      // Subscriptions will happen at the template level using async pipe
+      // hence no nested subscription possible.
+
+      // courses$.subscribe(
+      //   courses => {
+
+      //   },
+      //   noop,
+      //   () => console.log('completed')
+      // );
 
 
     }
