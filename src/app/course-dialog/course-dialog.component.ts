@@ -6,6 +6,7 @@ import * as moment from 'moment';
 import {fromEvent} from 'rxjs';
 import {concatMap, distinctUntilChanged, exhaustMap, filter, mergeMap} from 'rxjs/operators';
 import {fromPromise} from 'rxjs/internal-compatibility';
+import { saveCourse } from '../../../server/save-course.route';
 
 @Component({
     selector: 'course-dialog',
@@ -39,6 +40,23 @@ export class CourseDialogComponent implements OnInit, AfterViewInit {
 
     ngOnInit() {
 
+      this.form.valueChanges
+            .pipe(
+                filter(() => this.form.valid)
+            )
+            .subscribe(changes => {
+
+              const saveCourse$ = fromPromise(fetch(`/api/courses/${this.course.id}`, {
+                method: 'PUT',
+                body: JSON.stringify(changes),
+                headers: {
+                  'content-type': 'application/json'
+                }
+              }));
+
+              saveCourse$.subscribe();
+
+            });
 
 
     }

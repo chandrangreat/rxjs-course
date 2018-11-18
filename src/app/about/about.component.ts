@@ -40,7 +40,7 @@ export class AboutComponent implements OnInit {
     //   noop,
     //   () => console.log('completed')
     // );
-    const source1$ = interval(1000);
+    const source1$ = of(1, 2, 3);
     const source2$ = of(4, 5, 6);
     const source3$ = of(7, 8, 9);
 
