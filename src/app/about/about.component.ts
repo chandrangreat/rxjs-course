@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { timer, fromEvent, Observable, noop  } from 'rxjs';
+import { timer, fromEvent, Observable, noop, of, interval, concat  } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { createHttpObservable } from '../common/util';
 
@@ -40,6 +40,13 @@ export class AboutComponent implements OnInit {
     //   noop,
     //   () => console.log('completed')
     // );
+    const source1$ = interval(1000);
+    const source2$ = of(4, 5, 6);
+    const source3$ = of(7, 8, 9);
+
+    const result$ = concat(source1$, source2$, source3$);
+
+    result$.subscribe(console.log);
   }
 
 }
